@@ -1,0 +1,8 @@
+big brain article explaining using say a queue, in ISR contexts & regular contexts
+  https://joelfilho.com/blog/2021/interrupt_guards_c_cpp/
+  
+interrupt safe programs == reentrant program.
+useful if im going to be using queue & interrupts
+https://en.wikipedia.org/wiki/Reentrancy_(computing)
+
+look into std::atomic maybe?
