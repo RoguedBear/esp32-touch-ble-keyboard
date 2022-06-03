@@ -10,3 +10,6 @@ look into std::atomic maybe?
 implement a "interrupt safe circular queue/buffer" maybe instead of linked list based queue?
 https://stackoverflow.com/questions/14437797/interrupt-safe-buffer#14440477
 https://www.downtowndougbrown.com/2013/01/microcontrollers-interrupt-safe-ring-buffers/
+
+technical article explaining almost everything on ISRs and interrupts
+http://www.gammon.com.au/interrupts
