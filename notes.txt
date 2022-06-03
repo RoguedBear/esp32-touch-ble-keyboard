@@ -13,3 +13,6 @@ https://www.downtowndougbrown.com/2013/01/microcontrollers-interrupt-safe-ring-b
 
 technical article explaining almost everything on ISRs and interrupts
 http://www.gammon.com.au/interrupts
+
+can dynamically generate ISR handlers by passing args & using lambda functions
+https://forum.arduino.cc/t/using-isr-with-a-parameter/582169/13
