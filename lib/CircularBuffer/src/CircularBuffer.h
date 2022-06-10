@@ -12,7 +12,7 @@ template <class T> class CircularBuffer {
      * @param buffer_size size of the buffer to allocate. reccomended to keep
      * something in power of 2
      */
-    CircularBuffer(int buffer_size) {}
+    CircularBuffer(int buffer_size);
 
     /**
      * @return boolean if the buffer is empty or has something

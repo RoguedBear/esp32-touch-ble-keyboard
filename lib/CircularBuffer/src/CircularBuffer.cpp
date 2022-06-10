@@ -2,7 +2,7 @@
 
 template <class T> CircularBuffer<T>::CircularBuffer(int buffer_size) {
     __buffer_size = buffer_size;
-    __buffer      = new T[_buffer_size];
+    __buffer      = new T[__buffer_size];
     head          = 0;
     tail          = 0;
 }
@@ -26,13 +26,13 @@ template <class T> bool CircularBuffer<T>::push(const T &value) {
 }
 
 /**
- * @return NULL if buffer is empty and pop is called
+ * @return nullptr if buffer is empty and pop is called
  */
 template <class T> const T CircularBuffer<T>::pop() {
     tail = tail % __buffer_size; // wrap around just in case
     if (tail != head) {
         return __buffer[tail++]; // return current tail item, then increment
     } else {
-        return NULL;
+        return nullptr;
     }
 }
