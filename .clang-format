@@ -1,0 +1,14 @@
+---
+BasedOnStyle: LLVM
+AlignAfterOpenBracket: Align
+AlignConsecutiveMacros: "true"
+AlignConsecutiveAssignments: "true"
+AlignConsecutiveDeclarations: "true"
+AlignOperands: "true"
+AlignTrailingComments: "true"
+AllowAllArgumentsOnNextLine: "false"
+IncludeBlocks: Regroup
+IndentWidth: "4"
+Language: Cpp
+ReflowComments: "true"
+SortIncludes: "true"
