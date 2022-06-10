@@ -4,7 +4,7 @@
 template <class T> class CircularBuffer {
   private:
     int __buffer_size;
-    T **__buffer;
+    T * __buffer;
     int head, tail;
 
   public:
@@ -14,11 +14,48 @@ template <class T> class CircularBuffer {
      */
     CircularBuffer(int buffer_size);
 
-    /**
-     * @return boolean if the buffer is empty or has something
-     */
     bool    is_empty();
     bool    push(const T &value);
     const T pop();
 };
+
+// =======================================================================
+
+template <class T> CircularBuffer<T>::CircularBuffer(int buffer_size) {
+    __buffer_size = buffer_size;
+    __buffer      = new T[__buffer_size];
+    head          = 0;
+    tail          = 0;
+}
+
+/**
+ * @return boolean if the buffer is empty or has something
+ */
+template <class T> bool CircularBuffer<T>::is_empty() { return head == tail; }
+
+/**
+ * adds item into buffer.
+ * @return true if item was added into buffer or discarded
+ */
+template <class T> bool CircularBuffer<T>::push(const T &value) {
+    head = head % __buffer_size; // wrap around buffer length
+    if (head != tail) {          // if head isn't same as tail
+                                 // aka buffer is not full
+        __buffer[head] = value;
+        head++;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+template <class T> const T CircularBuffer<T>::pop() {
+    tail = tail % __buffer_size; // wrap around just in case
+    if (tail != head) {
+        return __buffer[tail++]; // return current tail item, then increment
+    } else {
+        return nullptr;
+    }
+}
+
 #endif
