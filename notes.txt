@@ -1,0 +1,18 @@
+big brain article explaining using say a queue, in ISR contexts & regular contexts
+  https://joelfilho.com/blog/2021/interrupt_guards_c_cpp/
+  
+interrupt safe programs == reentrant program.
+useful if im going to be using queue & interrupts
+https://en.wikipedia.org/wiki/Reentrancy_(computing)
+
+look into std::atomic maybe?
+
+implement a "interrupt safe circular queue/buffer" maybe instead of linked list based queue?
+https://stackoverflow.com/questions/14437797/interrupt-safe-buffer#14440477
+https://www.downtowndougbrown.com/2013/01/microcontrollers-interrupt-safe-ring-buffers/
+
+technical article explaining almost everything on ISRs and interrupts
+http://www.gammon.com.au/interrupts
+
+can dynamically generate ISR handlers by passing args & using lambda functions
+https://forum.arduino.cc/t/using-isr-with-a-parameter/582169/13
