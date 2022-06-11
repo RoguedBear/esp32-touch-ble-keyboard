@@ -9,6 +9,7 @@ template <class T> class CircularBuffer {
 
   public:
     /**
+     * Circular Buffer, stores (size - 1) items
      * @param buffer_size size of the buffer to allocate. reccomended to keep
      * something in power of 2
      */
@@ -17,6 +18,9 @@ template <class T> class CircularBuffer {
     bool    is_empty();
     bool    push(const T &value);
     const T pop();
+#ifdef NATIVE_TEST
+    void print(); // for testing purposes only
+#endif
 };
 
 // =======================================================================
@@ -29,7 +33,7 @@ template <class T> CircularBuffer<T>::CircularBuffer(int buffer_size) {
 }
 
 /**
- * @return boolean if the buffer is empty or has something
+ * @return boolean if the buffer is empty aka has zero items
  */
 template <class T> bool CircularBuffer<T>::is_empty() { return head == tail; }
 
@@ -38,24 +42,45 @@ template <class T> bool CircularBuffer<T>::is_empty() { return head == tail; }
  * @return true if item was added into buffer or discarded
  */
 template <class T> bool CircularBuffer<T>::push(const T &value) {
-    head = head % __buffer_size; // wrap around buffer length
-    if (head != tail) {          // if head isn't same as tail
-                                 // aka buffer is not full
+    int next_head = (head + 1) % __buffer_size; // wrap around buffer length
+    if (next_head != tail) {                    // if head isn't same as tail
+                                                // aka buffer is not full
         __buffer[head] = value;
-        head++;
+        head           = next_head;
         return true;
     } else {
         return false;
     }
 }
 
+/**
+ * @return '\0' null byte, if buffer is empty
+ */
 template <class T> const T CircularBuffer<T>::pop() {
     tail = tail % __buffer_size; // wrap around just in case
-    if (tail != head) {
-        return __buffer[tail++]; // return current tail item, then increment
+    if (!this->is_empty()) {     // if not empty
+        T _val = __buffer[tail];
+        tail++;
+        return _val;
     } else {
-        return nullptr;
+        return '\0';
     }
 }
+
+/** For testing purposes only */
+#ifdef NATIVE_TEST
+#include <cstdio>
+#include <stdbool.h>
+#include <stdint.h>
+template <class T> void CircularBuffer<T>::print() {
+    printf("[head=%d,tail=%d]", head, tail);
+    printf("[ ");
+    for (int i = 0; i < __buffer_size; i++) {
+        printf("%c ", __buffer[i]);
+    }
+    printf("]"); // apparently escape characters are not processed in
+                 // platformio's output
+}
+#endif
 
 #endif
