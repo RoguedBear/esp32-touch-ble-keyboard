@@ -56,6 +56,20 @@ void test_circular_buffer_pop_when_buffer_empty() {
     TEST_ASSERT_EQUAL_CHAR('\0', buffer.pop());
 }
 
+void test_sample_run() {
+    CircularBuffer<char> buffer(4);
+    TEST_ASSERT_TRUE(buffer.push('a'));
+    TEST_ASSERT_FALSE(buffer.is_empty());
+    TEST_ASSERT_TRUE(buffer.push('b'));
+    TEST_ASSERT_TRUE(buffer.push('c'));
+    TEST_ASSERT_FALSE(buffer.is_empty());
+
+    buffer.pop();
+    buffer.pop();
+    buffer.pop();
+    TEST_ASSERT_TRUE(buffer.is_empty());
+}
+
 int main() {
     UNITY_BEGIN();
 
@@ -65,6 +79,7 @@ int main() {
     RUN_TEST(test_circular_buffer_push_pop_2_items);
     RUN_TEST(test_circular_buffer_push_when_buffer_full);
     RUN_TEST(test_circular_buffer_pop_when_buffer_empty);
+    RUN_TEST(test_sample_run);
 
     UNITY_END();
 }
