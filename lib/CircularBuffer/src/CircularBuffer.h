@@ -57,10 +57,10 @@ template <class T> bool CircularBuffer<T>::push(const T &value) {
  * @return null object of the type initialised in template, if buffer is empty
  */
 template <class T> const T CircularBuffer<T>::pop() {
-    tail = tail % __buffer_size; // wrap around just in case
-    if (!this->is_empty()) {     // if not empty
+    int next_tail = (tail + 1) % __buffer_size; // wrap around just in case
+    if (!this->is_empty()) {                    // if not empty
         T _val = __buffer[tail];
-        tail++;
+        tail   = next_tail;
         return _val;
     } else {
         return T();
