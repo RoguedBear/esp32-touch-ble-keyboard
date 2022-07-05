@@ -54,7 +54,7 @@ template <class T> bool CircularBuffer<T>::push(const T &value) {
 }
 
 /**
- * @return '\0' null byte, if buffer is empty
+ * @return null object of the type initialised in template, if buffer is empty
  */
 template <class T> const T CircularBuffer<T>::pop() {
     tail = tail % __buffer_size; // wrap around just in case
@@ -63,7 +63,7 @@ template <class T> const T CircularBuffer<T>::pop() {
         tail++;
         return _val;
     } else {
-        return '\0';
+        return T();
     }
 }
 
