@@ -2,6 +2,7 @@
  * basic harcoded code, POC that this technique works
  */
 #include "CircularBuffer.h"
+#include "KEY_CONFIG.h"
 #include "TouchKey.h"
 // #define USE_NIMBLE
 
@@ -15,32 +16,39 @@ TouchKey                              test_key(T3, 's');
 volatile unsigned long last_touch = 0;
 volatile char *        test;
 
-// class TestClass {
-//   public:
-//     char c;
-//     TestClass(char chr) : c(chr) {}
-// };
-// TestClass w('w');
-// void test_ISR_handler() {
-//     if (millis() - last_touch >= 100) {
-//         last_touch = millis();
-//         buffer.push('w');
-//     }
-// }
-
 void test_ISR_handler_arg(void *obj) {
     TouchKey *class_ptr = (TouchKey *)obj;
     buffer.push(class_ptr->generate_timestamp());
+}
+
+/**
+ * Register ISR handlers for all the defined keys in the array
+ */
+void register_ISR_handlers(void) {
+
+    // using this because array size *is* known at compile time
+    int array_len = sizeof(TOUCH_KEYS) / sizeof(TouchKey);
+
+    for (int i = 0; i < array_len; i++) {
+        TouchKey *key_obj = &TOUCH_KEYS[i];
+        touchAttachInterruptArg(key_obj->pin, test_ISR_handler_arg,
+                                (void *)key_obj, 40);
+        Serial.printf("Registered handler for key '%c' at pin %d\n",
+                      key_obj->letter_to_press, key_obj->pin);
+    }
 }
 
 void setup() {
     // TODO: refactor all this
     pinMode(2, OUTPUT);
     Serial.begin(115200);
-    Serial.println("Starting BLE work!");
 
-    touchAttachInterruptArg(T3, test_ISR_handler_arg, (void *)&test_key, 40);
+    Serial.println("Registering touch interrupts");
+    register_ISR_handlers();
+
+    Serial.println("Starting BLE work!");
     bleKeyboard.begin();
+
     while (!bleKeyboard.isConnected()) {
         digitalWrite(2, HIGH);
         delay(10);
@@ -63,10 +71,11 @@ void loop() {
                 bleKeyboard.write(key_obj->letter_to_press);
 
                 Serial.printf(
-                    "Timestamp: last_recorded_ms:%lu \tmillis: %lu "
-                    "\tdelta:%lu \tdelta new:%lu\n\n",
+                    "Timestamp: letter:%d|%c last_recorded_ms:%lu \tmillis: "
+                    "%lu \tdelta new:%lu\n\n",
+                    key_obj->letter_to_press, key_obj->letter_to_press,
                     timestamp.last_touch_ms, timestamp.time_recorded_ms,
-                    timestamp.time_recorded_ms - timestamp.last_touch_ms,
+
                     timestamp.time_recorded_ms - old_last_touch);
             }
         }
