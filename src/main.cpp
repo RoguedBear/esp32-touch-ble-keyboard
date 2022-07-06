@@ -9,8 +9,8 @@
 #include <BleKeyboard.h>
 
 BleKeyboard                           bleKeyboard;
-CircularBuffer<key_press_timestamp_t> buffer(64);
-TouchKey                              test_key(T3, 'w');
+CircularBuffer<key_press_timestamp_t> buffer(5);
+TouchKey                              test_key(T3, 's');
 
 volatile unsigned long last_touch = 0;
 volatile char *        test;
