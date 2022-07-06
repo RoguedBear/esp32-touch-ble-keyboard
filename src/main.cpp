@@ -1,20 +1,12 @@
-/**
- * basic harcoded code, POC that this technique works
- */
 #include "CircularBuffer.h"
 #include "KEY_CONFIG.h"
 #include "TouchKey.h"
-// #define USE_NIMBLE
 
 #include <Arduino.h>
 #include <BleKeyboard.h>
 
 BleKeyboard                           bleKeyboard;
 CircularBuffer<key_press_timestamp_t> buffer(5);
-TouchKey                              test_key(T3, 's');
-
-volatile unsigned long last_touch = 0;
-volatile char *        test;
 
 void test_ISR_handler_arg(void *obj) {
     TouchKey *class_ptr = (TouchKey *)obj;
@@ -55,8 +47,6 @@ void setup() {
         digitalWrite(2, LOW);
         delay(500);
     }
-
-    // touchAttachInterrupt(T3, test_ISR_handler, 60);
     // TODO: clear the buffer here
 }
 
@@ -81,12 +71,10 @@ void loop() {
         }
 
     } else {
-        // Serial.println("Not connected :/");
         digitalWrite(2, HIGH);
         // TODO: clear the buffer here
     }
 
-    // Serial.println("Waiting 5 seconds...");
     delay(50);
 }
 int main() {}
