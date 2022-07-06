@@ -1,6 +1,12 @@
 #ifndef _CIRCULAR_BUFFER
 #define _CIRCULAR_BUFFER
 
+#ifdef DEBUG_CODE
+#include "TouchKey.h"
+
+#include <WString.h>
+#endif
+
 template <class T> class CircularBuffer {
   private:
     int __buffer_size;
@@ -18,6 +24,9 @@ template <class T> class CircularBuffer {
     bool    is_empty();
     bool    push(const T &value);
     const T pop();
+#ifdef DEBUG_CODE
+    String print();
+#endif
 #ifdef NATIVE_TEST
     void print(); // for testing purposes only
 #endif
@@ -66,6 +75,38 @@ template <class T> const T CircularBuffer<T>::pop() {
         return T();
     }
 }
+
+#ifdef DEBUG_CODE
+template <class T> String CircularBuffer<T>::print() {
+
+    int    head_copy      = head;
+    int    tail_copy      = tail;
+    int    head_copy_copy = head_copy;
+    int    tail_copy_copy = tail_copy;
+    String output("[ ");
+    while (tail_copy_copy != head_copy) {
+        output += String(((key_press_timestamp_t *)&__buffer[tail_copy_copy])
+                             ->obj->letter_to_press) +
+                  String(' ');
+        tail_copy_copy = (tail_copy_copy + 1) % __buffer_size;
+    }
+    output += String("]");
+
+    output += String(" \thead=") + String(head_copy) + String(" tail=") +
+              String(tail_copy);
+
+    // output += String(" [ ");
+    // while (head_copy_copy != tail_copy) {
+    //     output += String(((key_press_timestamp_t *)&__buffer[head_copy_copy])
+    //                          ->obj->letter_to_press) +
+    //               String(' ');
+    //     head_copy_copy = (head_copy_copy + 1) % __buffer_size;
+    // }
+    // output += String("]");
+
+    return output;
+}
+#endif
 
 /** For testing purposes only */
 #ifdef NATIVE_TEST

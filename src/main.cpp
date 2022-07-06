@@ -54,6 +54,9 @@ void loop() {
     if (bleKeyboard.isConnected()) {
         digitalWrite(2, LOW);
         if (!buffer.is_empty()) {
+#ifdef DEBUG_CODE
+            Serial.println(buffer.print());
+#endif
             key_press_timestamp_t timestamp      = buffer.pop();
             TouchKey *            key_obj        = timestamp.obj;
             unsigned long         old_last_touch = key_obj->last_touch_ms;
