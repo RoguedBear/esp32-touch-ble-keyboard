@@ -90,10 +90,10 @@ template <class T> String CircularBuffer<T>::print() {
                   String(' ');
         tail_copy_copy = (tail_copy_copy + 1) % __buffer_size;
     }
-    output += String("]");
+    output += String("]    ");
 
-    output += String(" \thead=") + String(head_copy) + String(" tail=") +
-              String(tail_copy);
+    output +=
+        String("\tt=") + String(tail_copy) + String(" h=") + String(head_copy);
 
     // output += String(" [ ");
     // while (head_copy_copy != tail_copy) {

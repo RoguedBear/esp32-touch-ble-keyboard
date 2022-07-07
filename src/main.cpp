@@ -5,12 +5,18 @@
 #include <Arduino.h>
 #include <BleKeyboard.h>
 
+// testing if this fixes TG1WDT_SYS_RESET
+#define CONFIG_ESP_TASK_WDT_TIMEOUT_S 30
+
 BleKeyboard                           bleKeyboard;
 CircularBuffer<key_press_timestamp_t> buffer(5);
 
 void test_ISR_handler_arg(void *obj) {
     TouchKey *class_ptr = (TouchKey *)obj;
     buffer.push(class_ptr->generate_timestamp());
+#ifdef DEBUG_CODE
+    Serial.printf("got %c at %lu\n", class_ptr->letter_to_press, millis());
+#endif
 }
 
 /**
@@ -55,7 +61,7 @@ void loop() {
         digitalWrite(2, LOW);
         if (!buffer.is_empty()) {
 #ifdef DEBUG_CODE
-            Serial.println(buffer.print());
+            String pre = buffer.print();
 #endif
             key_press_timestamp_t timestamp      = buffer.pop();
             TouchKey *            key_obj        = timestamp.obj;
@@ -71,6 +77,9 @@ void loop() {
 
                     timestamp.time_recorded_ms - old_last_touch);
             }
+#ifdef DEBUG_CODE
+            Serial.println(pre + " \t||| \t" + buffer.print());
+#endif
         }
 
     } else {
