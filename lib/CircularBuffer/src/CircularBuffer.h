@@ -24,6 +24,7 @@ template <class T> class CircularBuffer {
     bool    is_empty();
     bool    push(const T &value);
     const T pop();
+    const T poll();
 #ifdef DEBUG_CODE
     String print();
 #endif
@@ -70,6 +71,19 @@ template <class T> const T CircularBuffer<T>::pop() {
     if (!this->is_empty()) {                    // if not empty
         T _val = __buffer[tail];
         tail   = next_tail;
+        return _val;
+    } else {
+        return T();
+    }
+}
+
+/**
+ * returns the value from buffer without removing it
+ * @return null object of the type initialised in template, if buffer is empty
+ */
+template <class T> const T CircularBuffer<T>::poll() {
+    if (!this->is_empty()) {
+        T _val = __buffer[tail];
         return _val;
     } else {
         return T();

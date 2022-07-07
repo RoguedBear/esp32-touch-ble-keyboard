@@ -5,18 +5,16 @@
 #include <Arduino.h>
 #include <BleKeyboard.h>
 
-// testing if this fixes TG1WDT_SYS_RESET
-#define CONFIG_ESP_TASK_WDT_TIMEOUT_S 30
-
 BleKeyboard                           bleKeyboard;
-CircularBuffer<key_press_timestamp_t> buffer(5);
+key_press_timestamp_t *               discarded_ghost_touch;
 
 void test_ISR_handler_arg(void *obj) {
     TouchKey *class_ptr = (TouchKey *)obj;
     buffer.push(class_ptr->generate_timestamp());
-#ifdef DEBUG_CODE
-    Serial.printf("got %c at %lu\n", class_ptr->letter_to_press, millis());
-#endif
+    // #ifdef DEBUG_CODE
+    //     Serial.printf("got %c at %lu\n", class_ptr->letter_to_press,
+    //     millis());
+    // #endif
 }
 
 /**
@@ -66,6 +64,37 @@ void loop() {
             key_press_timestamp_t timestamp      = buffer.pop();
             TouchKey *            key_obj        = timestamp.obj;
             unsigned long         old_last_touch = key_obj->last_touch_ms;
+
+            /* Ghost touch prevention workaround */
+            if (!buffer.is_empty() || discarded_ghost_touch) {
+                key_press_timestamp_t next_timestamp;
+                if (!buffer.is_empty()) {
+                    next_timestamp = buffer.poll();
+                }
+                // if we already discarded a ghost touch, check if the letters
+                // are not same
+                if (discarded_ghost_touch &&
+                    discarded_ghost_touch->obj->letter_to_press !=
+                        timestamp.obj->letter_to_press) {
+                    next_timestamp = *discarded_ghost_touch;
+                }
+
+                unsigned long delta = next_timestamp.time_recorded_ms -
+                                      timestamp.time_recorded_ms;
+                if (delta <= 1) { // ghost touches are recorded at the exact
+                                  // same millisecond
+                    discarded_ghost_touch = &timestamp;
+                    Serial.printf("Discarded ghost touch: %c, delta:%lu, "
+                                  "current, next millis:%lu, %lu\n",
+                                  timestamp.obj->letter_to_press, delta,
+                                  timestamp.time_recorded_ms,
+                                  next_timestamp.time_recorded_ms);
+                    Serial.println(pre + " \t||| \t" + buffer.print());
+                    return;
+                }
+            }
+            discarded_ghost_touch = NULL;
+
             if (key_obj->process_touch(timestamp)) {
                 bleKeyboard.write(key_obj->letter_to_press);
 
