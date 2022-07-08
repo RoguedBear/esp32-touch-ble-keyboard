@@ -71,11 +71,10 @@ void loop() {
                 if (!buffer.is_empty()) {
                     next_timestamp = buffer.poll();
                 }
-                // if we already discarded a ghost touch, check if the letters
-                // are not same
+                // if we already discarded a ghost touch, check if the pins are
+                // different
                 if (discarded_ghost_touch &&
-                    discarded_ghost_touch->obj->letter_to_press !=
-                        timestamp.obj->letter_to_press) {
+                    discarded_ghost_touch->obj->pin != timestamp.obj->pin) {
                     next_timestamp = *discarded_ghost_touch;
                 }
 
