@@ -1,3 +1,4 @@
+#include "CONFIG.h"
 #include "CircularBuffer.h"
 #include "KEY_CONFIG.h"
 #include "TouchKey.h"
@@ -5,7 +6,10 @@
 #include <Arduino.h>
 #include <BleKeyboard.h>
 
-BleKeyboard                           bleKeyboard;
+BleKeyboard bleKeyboard(KB_BLUETOOTH_NAME, KB_BLUETOOTH_MANUFACTURER_NAME,
+                        KB_BLUETOOTH_BATTERY_LEVEL);
+
+CircularBuffer<key_press_timestamp_t> buffer(BUFFER_SIZE);
 key_press_timestamp_t *               discarded_ghost_touch;
 
 void test_ISR_handler_arg(void *obj) {
@@ -47,7 +51,7 @@ void setup() {
 
     while (!bleKeyboard.isConnected()) {
         digitalWrite(2, HIGH);
-        delay(10);
+        delay(50);
         digitalWrite(2, LOW);
         delay(500);
     }
@@ -115,6 +119,6 @@ void loop() {
         // TODO: clear the buffer here
     }
 
-    delay(50);
+    delay(10);
 }
 int main() {}
