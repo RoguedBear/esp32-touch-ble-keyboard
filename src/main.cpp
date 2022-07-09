@@ -11,6 +11,7 @@ BleKeyboard bleKeyboard(KB_BLUETOOTH_NAME, KB_BLUETOOTH_MANUFACTURER_NAME,
 
 CircularBuffer<key_press_timestamp_t> buffer(BUFFER_SIZE);
 key_press_timestamp_t *               discarded_ghost_touch;
+unsigned long                         __led_last_on = 0;
 
 void test_ISR_handler_arg(void *obj) {
     TouchKey *class_ptr = (TouchKey *)obj;
@@ -55,7 +56,7 @@ void setup() {
         digitalWrite(2, LOW);
         delay(500);
     }
-    // TODO: clear the buffer here
+    buffer.clear();
 }
 
 void loop() {
@@ -92,7 +93,9 @@ void loop() {
                                   timestamp.obj->letter_to_press, delta,
                                   timestamp.time_recorded_ms,
                                   next_timestamp.time_recorded_ms);
+#ifdef DEBUG_CODE
                     Serial.println(pre + " \t||| \t" + buffer.print());
+#endif
                     return;
                 }
             }
@@ -115,8 +118,15 @@ void loop() {
         }
 
     } else {
-        digitalWrite(2, HIGH);
-        // TODO: clear the buffer here
+        unsigned long now = millis();
+        if (now - __led_last_on >= 500) {
+            __led_last_on = now;
+            digitalWrite(2, HIGH);
+            delay(50);
+            digitalWrite(2, LOW);
+        }
+
+        buffer.clear();
     }
 
     delay(10);

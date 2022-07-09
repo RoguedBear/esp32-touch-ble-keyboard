@@ -22,6 +22,7 @@ template <class T> class CircularBuffer {
     CircularBuffer(int buffer_size);
 
     bool    is_empty();
+    void    clear();
     bool    push(const T &value);
     const T pop();
     const T poll();
@@ -46,6 +47,11 @@ template <class T> CircularBuffer<T>::CircularBuffer(int buffer_size) {
  * @return boolean if the buffer is empty aka has zero items
  */
 template <class T> bool CircularBuffer<T>::is_empty() { return head == tail; }
+
+/**
+ * clears the buffer
+ */
+template <class T> void CircularBuffer<T>::clear() { head = tail; }
 
 /**
  * adds item into buffer.
