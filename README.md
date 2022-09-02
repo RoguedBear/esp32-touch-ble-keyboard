@@ -24,6 +24,10 @@ so......
 custom case i designed to mount on my laptop's SD card reader to make the "keyboard"
 even more portable
 
+[preview the 3d `*.stl` files directly in github -->](https://github.com/RoguedBear/esp32-touch-ble-keyboard/tree/main/3D-case-files)
+
+[note: final designs are different than the rendered video cuz i cant be bothered to update the video when the design updated too \\o_o/]
+
 https://user-images.githubusercontent.com/39442192/188220671-781dfebc-abb5-4139-afbe-f23158edf579.mp4
 
 
