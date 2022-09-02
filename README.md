@@ -20,6 +20,13 @@ so......
 
 </details>
 
+## 3d Printed case
+custom case i designed to mount on my laptop's SD card reader to make the "keyboard"
+even more portable
+
+https://user-images.githubusercontent.com/39442192/188220671-781dfebc-abb5-4139-afbe-f23158edf579.mp4
+
+
 ## How to use
 
 ### Pre-requisites
@@ -48,7 +55,7 @@ after you're done configuring, build the code and upload to your board
 ## ToDo
 
 - [ ] improve touch processing algorithm to imitate a real keyboard's
-- [ ] make a 3d printed case
+- [x] make a 3d printed case
 
 ## Credits
 
