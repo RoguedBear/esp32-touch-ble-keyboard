@@ -33,7 +33,7 @@ void register_ISR_handlers(void) {
     for (int i = 0; i < array_len; i++) {
         TouchKey *key_obj = &TOUCH_KEYS[i];
         touchAttachInterruptArg(key_obj->pin, test_ISR_handler_arg,
-                                (void *)key_obj, TOUCH_THRESHOLD);
+                                (void *)key_obj, key_obj->threshold);
         Serial.printf("Registered handler for key '%c' at pin %d\n",
                       key_obj->letter_to_press, key_obj->pin);
     }

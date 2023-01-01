@@ -21,6 +21,7 @@ so......
 </details>
 
 ## 3d Printed case
+
 custom case i designed to mount on my laptop's SD card reader to make the "keyboard"
 even more portable
 
@@ -29,7 +30,6 @@ even more portable
 [note: final designs are different than the rendered video cuz i cant be bothered to update the video when the design updated too \\o_o/]
 
 https://user-images.githubusercontent.com/39442192/188220671-781dfebc-abb5-4139-afbe-f23158edf579.mp4
-
 
 ## How to use
 
@@ -43,8 +43,10 @@ open the project in VSCode and install platformio extension
   [`includes/KEY_CONFIG.h`](https://github.com/RoguedBear/esp32-touch-ble-keyboard/blob/main/include/KEY_CONFIG.h#L4-L5)
 
 - inside the `TOUCH_KEYS` array, initialise your keys using the format:
-  `TouchKey(<<pin number>>, '<<letter to press>>')` (refer sample config in that
-  file)
+  ```
+  TouchKey( <<pin number>>, '<<letter to press>>', <<optional threshold for *this* pin>> )
+  ```
+  (refer sample config in that file)
 
 for the pin number, make sure to refer the pinout diagram of your ESP board and
 select the touch pins only (touch pins are prefixed with `T`)

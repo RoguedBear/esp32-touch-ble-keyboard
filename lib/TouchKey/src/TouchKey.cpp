@@ -1,7 +1,8 @@
 #include "TouchKey.h"
 
-TouchKey::TouchKey(uint8_t pin, char letter_to_press)
-    : pin(pin), letter_to_press(letter_to_press), is_pressed(false) {}
+TouchKey::TouchKey(uint8_t pin, char letter_to_press, int threshold)
+    : pin(pin), letter_to_press(letter_to_press), is_pressed(false),
+      threshold(threshold) {}
 
 key_press_timestamp_t TouchKey::generate_timestamp() {
     key_press_timestamp_t timestamp = {

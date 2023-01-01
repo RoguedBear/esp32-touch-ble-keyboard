@@ -15,6 +15,10 @@ unsigned long         millis() { // stub
 #define KEY_PRESS_TIMEOUT_ms 500
 #endif
 
+#ifndef TOUCH_THRESHOLD
+#define TOUCH_THRESHOLD 20
+#endif
+
 class TouchKey; // forward declaration for struct
 
 struct key_press_timestamp_t {
@@ -28,10 +32,12 @@ class TouchKey {
     uint8_t pin;
     bool    is_pressed;
     char    letter_to_press;
+    int     threshold;
 
     volatile unsigned long last_touch_ms;
 
-    TouchKey(uint8_t pin, char letter_to_press);
+    TouchKey(uint8_t pin, char letter_to_press,
+             int threshold = TOUCH_THRESHOLD);
 
     /**
      * Generates a timestamp containing neccessary info to process if
