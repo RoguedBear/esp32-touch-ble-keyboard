@@ -2,12 +2,13 @@
 #include "CircularBuffer.h"
 #include "KEY_CONFIG.h"
 #include "TouchKey.h"
-#include "utils.h"
+#include "utils/utils.h"
 
 #include <Arduino.h>
 #include <BleKeyboard.h>
 
-BleKeyboard bleKeyboard(KB_BLUETOOTH_NAME, KB_BLUETOOTH_MANUFACTURER_NAME,
+BleKeyboard bleKeyboard(generate_suffix(KB_BLUETOOTH_NAME).c_str(),
+                        KB_BLUETOOTH_MANUFACTURER_NAME,
                         KB_BLUETOOTH_BATTERY_LEVEL);
 
 CircularBuffer<key_press_timestamp_t> buffer(BUFFER_SIZE);

@@ -29,3 +29,16 @@ short detect_on_battery(const TouchKey *touch_key_arr, const short len) {
     }
     return 0;
 }
+
+/**
+ * returns a randomly chosen suffix from the `suffix_arr` and appends it to the
+ * main name
+ */
+String generate_suffix(String name) {
+#if OVERRIDE_15_CHAR_LIMIT == true
+    randomSeed(analogRead(4));
+    return name + suffix_arr[random(0, sizeof(suffix_arr) / sizeof(String))];
+#else
+    return name;
+#endif
+}
