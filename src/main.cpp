@@ -2,6 +2,7 @@
 #include "CircularBuffer.h"
 #include "KEY_CONFIG.h"
 #include "TouchKey.h"
+#include "utils.h"
 
 #include <Arduino.h>
 #include <BleKeyboard.h>
@@ -24,16 +25,20 @@ void test_ISR_handler_arg(void *obj) {
 
 /**
  * Register ISR handlers for all the defined keys in the array
+ * @param battery_mode if this flag is true, battery mode thresholds are used
+ *                     instead of key-specific thresholds
  */
-void register_ISR_handlers(void) {
-
+void register_ISR_handlers(bool battery_mode = false) {
     // using this because array size *is* known at compile time
     int array_len = sizeof(TOUCH_KEYS) / sizeof(TouchKey);
 
     for (int i = 0; i < array_len; i++) {
         TouchKey *key_obj = &TOUCH_KEYS[i];
+
+        auto threshold = battery_mode ? ON_BAT_THRESHOLD : key_obj->threshold;
+
         touchAttachInterruptArg(key_obj->pin, test_ISR_handler_arg,
-                                (void *)key_obj, key_obj->threshold);
+                                (void *)key_obj, threshold);
         Serial.printf("Registered handler for key '%c' at pin %d\n",
                       key_obj->letter_to_press, key_obj->pin);
     }
@@ -44,8 +49,17 @@ void setup() {
     pinMode(2, OUTPUT);
     Serial.begin(115200);
 
+    auto battery_mode =
+        detect_on_battery(TOUCH_KEYS, sizeof(TOUCH_KEYS) / sizeof(TouchKey));
+
+    if (battery_mode) {
+        // keyboard's battery level will be an indication
+        // if battery mode is activated or not
+        bleKeyboard.setBatteryLevel(battery_mode);
+    }
+
     Serial.println("Registering touch interrupts");
-    register_ISR_handlers();
+    register_ISR_handlers(battery_mode != 0);
 
     Serial.println("Starting BLE work!");
     bleKeyboard.begin();
