@@ -10,6 +10,10 @@
 #define TOUCH_THRESHOLD      20  // touch threshold used to detec touch
 #define ON_BAT_THRESHOLD     30  // overrides other thresholds on battery mode
 
+// if keyboard is not connected to a device for more than 5 minutes, esp will go
+// to deep sleep and can be woken up by pressing the touch pad
+#define DEEP_SLEEP_TIMEOUT_min 5
+
 // ================== EXPERIMENTAL!!! ==================
 // if you want to have the keyboard's name be greater than 15 characters, you
 // have to modify the ESP32-BLE-Keyboard library and remove the part where name

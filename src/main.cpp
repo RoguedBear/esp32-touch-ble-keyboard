@@ -14,6 +14,7 @@ BleKeyboard bleKeyboard(generate_suffix(KB_BLUETOOTH_NAME).c_str(),
 CircularBuffer<key_press_timestamp_t> buffer(BUFFER_SIZE);
 key_press_timestamp_t                 discarded_ghost_touch;
 unsigned long                         __led_last_on = 0;
+unsigned long                         __last_bt_connected = 0;
 
 void test_ISR_handler_arg(void *obj) {
     TouchKey *class_ptr = (TouchKey *)obj;
@@ -72,11 +73,13 @@ void setup() {
         delay(500);
     }
     buffer.clear();
+    esp_sleep_enable_touchpad_wakeup();
 }
 
 void loop() {
     if (bleKeyboard.isConnected()) {
         digitalWrite(2, LOW);
+        __last_bt_connected = millis();
         if (!buffer.is_empty()) {
 #ifdef DEBUG_CODE
             String pre = buffer.print();
@@ -143,6 +146,10 @@ void loop() {
         }
 
         buffer.clear();
+
+        if (now - __last_bt_connected >= DEEP_SLEEP_TIMEOUT_min * 60 * 1000) {
+            esp_deep_sleep_start();
+        }
     }
 
     delay(10);
